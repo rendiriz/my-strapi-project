@@ -21,16 +21,16 @@ export default ({ env }) => ({
       provider: "aws-s3",
       providerOptions: {
         credentials: {
-          accessKeyId: env("MINIO_USER"),
-          secretAccessKey: env("MINIO_PASSWORD"),
+          accessKeyId: env("AWS_ACCESS_KEY_ID"),
+          secretAccessKey: env("AWS_SECRET_ACCESS_KEY"),
         },
-        region: env("MINIO_REGION", "us-east-1"),
-        endpoint: env("MINIO_ENDPOINT", "http://localhost:9000"),
-        forcePathStyle: true, // Required for MinIO
+        region: env("AWS_REGION", "us-east-1"),
+        endpoint: env("AWS_ENDPOINT_URL_S3", "http://localhost:9000"),
+        // forcePathStyle: true, // Required for MinIO
         params: {
           ACL: "private",
-          signedUrlExpires: env("MINIO_SIGNED_URL_EXPIRES", 15 * 60),
-          Bucket: env("MINIO_BUCKET", "strapi"),
+          signedUrlExpires: env("AWS_SIGNED_URL_EXPIRES", 15 * 60),
+          Bucket: env("AWS_BUCKET", "strapi"),
         },
       },
     },
@@ -38,7 +38,7 @@ export default ({ env }) => ({
   redis: {
     config: {
       settings: {
-        debug: true,
+        debug: false,
         enableRedlock: true,
       },
       connections: {
@@ -52,7 +52,7 @@ export default ({ env }) => ({
             tls: env.bool("REDIS_TLS", false),
           },
           settings: {
-            debug: true,
+            debug: false,
           },
         },
       },
@@ -78,13 +78,13 @@ export default ({ env }) => ({
             maxAge: 3600000,
           },
           {
+            contentType: "api::global.global",
+            maxAge: 3600000,
+          },
+          {
             contentType: "api::organization.organization",
             maxAge: 3600000,
             hitpass: false,
-          },
-          {
-            contentType: "api::global.global",
-            maxAge: 3600000,
           },
         ],
       },
